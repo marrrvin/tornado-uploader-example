@@ -1,5 +1,7 @@
 # coding: utf-8
 
+from __future__ import absolute_import, division, print_function, with_statement
+
 import os
 
 from tornado.web import RequestHandler
@@ -38,13 +40,13 @@ class UploadHandler(RequestHandler):
 
         self.parser = MyPostDataStreamer(total)
 
-        print('#{_id}: init upload request.'.format(_id=_id))
+        gen_log.debug('#{_id}: init upload request.'.format(_id=_id))
 
     @gen.coroutine
     def data_received(self, data):
         _id = self.get_query_argument('id')
 
-        print('#{_id}: received {size} byte(s).'.format(
+        gen_log.debug('#{_id}: received {size} byte(s).'.format(
             _id=_id, size=len(data)
         ))
 
@@ -85,7 +87,7 @@ class UploadHandler(RequestHandler):
         finally:
             self.parser.release_parts()
 
-        print('#{_id}: upload complete.'.format(_id=_id))
+        gen_log.debug('#{_id}: upload complete.'.format(_id=_id))
 
     def on_finish(self):
         _id = self.get_query_argument('id')
@@ -95,14 +97,14 @@ class UploadHandler(RequestHandler):
         except KeyError:
             pass
 
-        print('#{_id}: cleanup.'.format(_id=_id))
+        gen_log.debug('#{_id}: cleanup.'.format(_id=_id))
 
 
 class UploadProgressHandler(RequestHandler):
     def get(self):
         _id = self.get_query_argument('id')
 
-        print('#{_id}: progress request.'.format(_id=_id))
+        gen_log.debug('#{_id}: progress request.'.format(_id=_id))
 
         try:
             progress = self.application.storage[_id]
