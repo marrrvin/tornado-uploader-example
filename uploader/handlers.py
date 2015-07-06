@@ -54,7 +54,7 @@ class UploadHandler(RequestHandler):
 
         self.parser.receive(data)
 
-        yield gen.sleep(1)
+        yield gen.sleep(0.01)
 
     def post(self):
         _id = self.get_query_argument('id')

@@ -15,6 +15,8 @@ DEFAULT_PORT = 8888
 
 DEFAULT_UPLOADED_DIR = os.path.join(CURRENT_DIR, 'uploaded')
 
+MAX_BUFFER_SIZE = 4 * 1024 * 1024 * 1024  # 4Gb
+
 
 define(
     'debug',
@@ -46,7 +48,10 @@ def main():
         debug=options.debug,
         uploaded_dir=options.uploaded_dir
     )
-    app.listen(options.port)
+    app.listen(
+        options.port,
+        max_buffer_size=MAX_BUFFER_SIZE
+    )
 
     IOLoop.current().start()
 
