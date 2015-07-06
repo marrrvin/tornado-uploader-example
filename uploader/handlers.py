@@ -13,11 +13,10 @@ class MyPostDataStreamer(PostDataStreamer):
     percent = 0
 
     def on_progress(self):
-        """Override this function to handle progress of receiving data."""
         if self.total:
-            new_percent = self.received * 100 // self.total
-            if new_percent != self.percent:
-                self.percent = new_percent
+            percent = self.received * 100 // self.total
+            if percent != self.percent:
+                self.percent = percent
 
 storage = {}
 
