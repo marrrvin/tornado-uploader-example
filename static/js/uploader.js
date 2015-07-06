@@ -25,7 +25,7 @@ Uploader.prototype = {
 
         that.form.parentNode.appendChild(iframe)
 
-        that.form.addEventListener('submit', function(event) {
+        that.form.addEventListener('submit', function() {
             var loaded = false
 
             that.form.setAttribute('target', iframe.id)
@@ -37,8 +37,6 @@ Uploader.prototype = {
                 var doc = that._getIFrameDocument(iframe)
 
                 result = JSON.parse(doc.documentElement.textContent)
-
-                console.log(result)
 
                 that.message_box.innerHTML = '<a href="' + result['download_url'] + '">' + 'Скачать' + '</a>'
             })
@@ -60,12 +58,8 @@ Uploader.prototype = {
                         return;
                     }
 
-                    if (xhr.status != 200) {
-                        console.log(xhr.status + ': ' + xhr.statusText)
-                    } else {
-                        result = JSON.parse(xhr.responseText)
-
-                        console.log('OK: ' + result['progress']);
+                    if (xhr.status == 200) {
+                        var result = JSON.parse(xhr.responseText)
 
                         that.message_box.innerHTML = result['progress'] + '%'
                     }
