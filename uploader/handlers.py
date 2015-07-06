@@ -6,7 +6,8 @@ from tornado.web import RequestHandler
 from tornado.web import stream_request_body
 from tornado import gen
 from tornado.log import gen_log
-from post_streamer import PostDataStreamer
+
+from uploader.post_streamer import PostDataStreamer
 
 
 class MyPostDataStreamer(PostDataStreamer):
@@ -17,8 +18,6 @@ class MyPostDataStreamer(PostDataStreamer):
             percent = self.received * 100 // self.total
             if percent != self.percent:
                 self.percent = percent
-
-storage = {}
 
 
 class IndexHandler(RequestHandler):
@@ -49,7 +48,7 @@ class UploadHandler(RequestHandler):
             _id=_id, size=len(data)
         ))
 
-        storage[_id] = self.parser.percent
+        self.application.storage[_id] = self.parser.percent
 
         self.parser.receive(data)
 
@@ -92,7 +91,7 @@ class UploadHandler(RequestHandler):
         _id = self.get_query_argument('id')
 
         try:
-            del storage[_id]
+            del self.application.storage[_id]
         except KeyError:
             pass
 
@@ -106,7 +105,7 @@ class UploadProgressHandler(RequestHandler):
         print('#{_id}: progress request.'.format(_id=_id))
 
         try:
-            progress = storage[_id]
+            progress = self.application.storage[_id]
 
             self.write({
                 'id': _id,
