@@ -15,7 +15,7 @@ DEFAULT_PORT = 8888
 
 DEFAULT_UPLOADED_DIR = os.path.join(CURRENT_DIR, 'uploaded')
 
-MAX_BUFFER_SIZE = 4 * 1024 * 1024 * 1024  # 4Gb
+MAX_BUFFER_SIZE = 16 * 1024 * 1024 * 1024  # 16Gb
 
 
 define(
