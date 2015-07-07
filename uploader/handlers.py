@@ -3,6 +3,7 @@
 from __future__ import absolute_import, division, print_function, with_statement
 
 import os
+import json
 
 from tornado.web import RequestHandler
 from tornado.web import stream_request_body
@@ -57,6 +58,9 @@ class UploadHandler(RequestHandler):
         yield gen.sleep(0.01)
 
     def post(self):
+        """
+        Upload file
+        """
         _id = self.get_query_argument('id')
         uploaded_dir = self.application.settings['uploaded_dir']
         buf_size = 4096
@@ -78,11 +82,12 @@ class UploadHandler(RequestHandler):
                             break
                         fp.write(buf)
 
-            self.write({
+            self.set_header('Content-type', 'text/plain; charset=UTF-8')
+            self.write(json.dumps({
                 'id': _id,
                 'status': 'complete',
                 'download_url': u'/uploaded/{}'.format(filename)
-            })
+            }))
             self.finish()
         finally:
             self.parser.release_parts()
@@ -102,6 +107,9 @@ class UploadHandler(RequestHandler):
 
 class UploadProgressHandler(RequestHandler):
     def get(self):
+        """
+        Return file upload progress
+        """
         _id = self.get_query_argument('id')
 
         gen_log.debug('#{_id}: progress request.'.format(_id=_id))
@@ -114,4 +122,4 @@ class UploadProgressHandler(RequestHandler):
                 'progress': progress,
             })
         except KeyError:
-            self.send_error(400)
+            self.send_error(404)

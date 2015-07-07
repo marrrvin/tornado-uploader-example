@@ -36,7 +36,7 @@ Uploader.prototype = {
 
                 var doc = that._getIFrameDocument(iframe)
 
-                result = JSON.parse(doc.documentElement.textContent)
+                var result = JSON.parse(doc.documentElement.textContent)
 
                 that.message_box.innerHTML = '<a href="' + result['download_url'] + '">' + 'Скачать' + '</a>'
             })
